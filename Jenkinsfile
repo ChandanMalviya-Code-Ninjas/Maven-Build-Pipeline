@@ -4,7 +4,7 @@ pipeline {
         stage('clone repo & clean') {
             steps {
                 bat 'if exist "Maven-Build-Pipeline" rmdir /S /Q "Maven-Build-Pipeline"'  // Check if directory exists before deleting
-                bat "git clone https://github.com/DishaHolmukhe/Maven-Build-Pipeline.git"
+                bat "https://github.com/ChandanMalviya-Code-Ninjas/Maven-Build-Pipeline.git"
                 bat "mvn clean -f Maven-Build-Pipeline"
             }
         }
