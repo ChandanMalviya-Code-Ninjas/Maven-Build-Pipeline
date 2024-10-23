@@ -1,22 +1,42 @@
 pipeline {
     agent any
+    
+    tools {
+        maven 'M3' // Make sure 'Maven' is configured in Jenkins
+    }
+    
+    parameters {
+        string(name: 'CGPA', defaultValue: '', description: 'Enter your CGPA')
+    }
+    
     stages {
-        stage('clone repo & clean') {
+        stage('Checkout') {
             steps {
-                bat 'if exist "Maven-Build-Pipeline" rmdir /S /Q "Maven-Build-Pipeline"'  // Check if directory exists before deleting
-                bat "https://github.com/ChandanMalviya-Code-Ninjas/Maven-Build-Pipeline.git"
-                bat "mvn clean -f Maven-Build-Pipeline"
+                git branch: 'main', url: 'https://github.com/ChandanMalviya-Code-Ninjas/Maven-Build-Pipeline.git' // Replace with your GitHub repo URL
             }
         }
-        stage('Test') {
+        
+        stage('Build') {
             steps {
-                bat "mvn test -f Maven-Build-Pipeline"
+                // Use 'bat' for Windows instead of 'sh'
+                bat 'mvn clean compile'
             }
         }
-        stage('Deploy') {
+        
+        stage('Run App') {
             steps {
-                bat "mvn package -f Maven-Build-Pipeline"
+                // Use 'bat' and Windows-specific command for running Java application
+                bat 'mvn exec:java -Dexec.mainClass="com.example.App"'
             }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline executed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
